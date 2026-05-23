@@ -4,7 +4,7 @@
  SPDX-License-Identifier: BSD-3-Clause
  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 """
-
+from transformers import BitsAndBytesConfig
 from .base_model_inference import *
 import math
 import re
@@ -31,6 +31,12 @@ class Llava2Processor(BaseModelInference):
         super().__init__(model_name, local_save_path)
 
     def load_model(self):
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",
+        )
         model_name = get_model_name_from_path(self.model_name)
         (
             self.tokenizer,
@@ -43,7 +49,7 @@ class Llava2Processor(BaseModelInference):
             model_name,
             device=torch.cuda.current_device(),
             device_map="cuda",
-            load_4bit=True,
+            quantization_config=bnb_config,
         )
 
     def inference(self, *args, **kwargs):
