@@ -48,7 +48,6 @@ class Llava2Processor(BaseModelInference):
             None,
             model_name,
             device=torch.cuda.current_device(),
-            device_map="cuda",
             quantization_config=bnb_config,
         )
 
