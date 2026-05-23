@@ -43,6 +43,7 @@ class Llava2Processor(BaseModelInference):
             model_name,
             device=torch.cuda.current_device(),
             device_map="cuda",
+            load_4bit=True,
         )
 
     def inference(self, *args, **kwargs):
